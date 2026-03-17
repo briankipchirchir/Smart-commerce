@@ -1,7 +1,0 @@
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/exception/BadRequestException.java
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/response/PagedResult.java
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/exception/GlobalExceptionHandler.java
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/exception/UnauthorizedException.java
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/exception/ResourceNotFoundException.java
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/response/ApiResponse.java
-/home/kipchirchir/smart-commerce-platform/backend/shared-library/src/main/java/com/smartcommerce/exception/DuplicateResourceException.java

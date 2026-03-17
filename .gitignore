@@ -1,14 +1,15 @@
-# Maven
-backend/**/target/
-backend/**/*.jar
-backend/**/*.class
+# Maven build output
+**/target/
+**/*.jar
+**/*.war
+**/*.class
 
 # Node
 frontend/**/node_modules/
 frontend/**/.angular/
 frontend/**/dist/
 
-# Environment & secrets
+# Secrets
 **/.env
 **/application-prod.properties
 
