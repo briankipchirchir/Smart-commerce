@@ -1,0 +1,15 @@
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/service/ProductService.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/config/SecurityConfig.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/controller/ProductController.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/entity/Product.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/ProductServiceApplication.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/service/CategoryService.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/dto/ProductRequest.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/dto/CategoryRequest.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/dto/CategoryResponse.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/dto/ProductResponse.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/repository/CategoryRepository.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/entity/Category.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/mapper/ProductMapper.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/repository/ProductRepository.java
+/home/kipchirchir/smart-commerce-platform/backend/product-service/src/main/java/com/smartcommerce/controller/CategoryController.java
