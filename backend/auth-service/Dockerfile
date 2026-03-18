@@ -3,6 +3,7 @@ WORKDIR /app
 COPY pom.xml ./
 COPY shared-library/ ./shared-library/
 COPY auth-service/ ./auth-service/
+RUN sed -i 's|<module>product-service</module>||g; s|<module>order-service</module>||g; s|<module>api-gateway</module>||g; s|<module>notification-service</module>||g' pom.xml
 RUN mvn install -N -DskipTests
 RUN mvn install -pl shared-library -DskipTests
 RUN mvn package -pl auth-service -DskipTests
