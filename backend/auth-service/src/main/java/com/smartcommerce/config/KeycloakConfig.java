@@ -24,11 +24,10 @@ public class KeycloakConfig {
     public Keycloak keycloakAdminClient() {
         return KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
-                .realm("master")
-                .clientId("admin-cli")
-                .username("admin")
-                .password("admin123")
-                .grantType(OAuth2Constants.PASSWORD)
+                .realm("smartcommerce")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .build();
     }
 
