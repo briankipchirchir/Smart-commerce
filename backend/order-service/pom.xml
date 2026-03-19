@@ -70,10 +70,8 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
-                <!-- THIS IS IMPORTANT -->
                 <configuration>
-                    <mainClass>com.smartcommerce.orderservice.OrderServiceApplication</mainClass>
+                    <mainClass>com.smartcommerce.OrderServiceApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
