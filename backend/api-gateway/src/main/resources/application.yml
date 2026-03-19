@@ -3,6 +3,11 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 60s
+        pool:
+          max-idle-time: 30s
       routes:
         - id: auth-service
           uri: ${AUTH_SERVICE_URL}
@@ -10,6 +15,14 @@ spring:
             - Path=/api/auth/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                methods: GET,POST,PUT,DELETE
+                backoff:
+                  firstBackoff: 1s
+                  maxBackoff: 5s
 
         - id: product-service
           uri: ${PRODUCT_SERVICE_URL}
@@ -17,6 +30,14 @@ spring:
             - Path=/api/products/**, /api/categories/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                methods: GET,POST,PUT,DELETE
+                backoff:
+                  firstBackoff: 1s
+                  maxBackoff: 5s
 
         - id: order-service
           uri: ${ORDER_SERVICE_URL}
@@ -24,6 +45,14 @@ spring:
             - Path=/api/orders/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                methods: GET,POST,PUT,DELETE
+                backoff:
+                  firstBackoff: 1s
+                  maxBackoff: 5s
 
         - id: payment-service
           uri: ${PAYMENT_SERVICE_URL}
@@ -31,6 +60,14 @@ spring:
             - Path=/api/payments/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                methods: GET,POST,PUT,DELETE
+                backoff:
+                  firstBackoff: 1s
+                  maxBackoff: 5s
 
       globalcors:
         corsConfigurations:
