@@ -3,9 +3,10 @@ WORKDIR /app
 COPY pom.xml ./
 COPY shared-library/ ./shared-library/
 COPY order-service/ ./order-service/
-RUN mvn install -N -DskipTests
-RUN mvn install -pl shared-library -DskipTests
-RUN mvn package -pl order-service -DskipTests
+
+RUN mvn install -N -DskipTests -Porder-service
+RUN mvn install -pl shared-library -DskipTests -Porder-service
+RUN mvn package -pl order-service -DskipTests -Porder-service
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

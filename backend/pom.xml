@@ -10,14 +10,7 @@
     <packaging>pom</packaging>
     <name>SmartCommerce Backend</name>
 
-    <modules>
-        <module>shared-library</module>
-        <module>auth-service</module>
-        <module>product-service</module>
-        <module>order-service</module>
-        <module>api-gateway</module>
-        <module>notification-service</module>
-    </modules>
+    <!-- No fixed modules here — each service uses its own profile -->
 
     <properties>
         <java.version>21</java.version>
@@ -29,6 +22,44 @@
         <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>order-service</id>
+            <modules>
+                <module>shared-library</module>
+                <module>order-service</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>product-service</id>
+            <modules>
+                <module>shared-library</module>
+                <module>product-service</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>auth-service</id>
+            <modules>
+                <module>shared-library</module>
+                <module>auth-service</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>api-gateway</id>
+            <modules>
+                <module>shared-library</module>
+                <module>api-gateway</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>notification-service</id>
+            <modules>
+                <module>shared-library</module>
+                <module>notification-service</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
