@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -54,6 +55,21 @@ public class EmailService {
     }
 
     private String buildOrderConfirmationHtml(OrderCreatedEvent event) {
+        String itemsHtml = "";
+        if (event.getItems() != null && !event.getItems().isEmpty()) {
+            itemsHtml = event.getItems().stream().map(item -> """
+                <tr>
+                  <td style="padding:10px;border-bottom:1px solid #eee;">%s</td>
+                  <td style="padding:10px;border-bottom:1px solid #eee;text-align:center;">%d</td>
+                  <td style="padding:10px;border-bottom:1px solid #eee;text-align:right;">$%s</td>
+                </tr>
+                """.formatted(
+                    item.getProductName(),
+                    item.getQuantity(),
+                    item.getTotalPrice().toPlainString()
+                )).collect(Collectors.joining());
+        }
+
         return """
             <!DOCTYPE html>
             <html>
@@ -64,8 +80,10 @@ public class EmailService {
               .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; }
               .body { padding: 30px; }
               .order-box { background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0; }
-              .order-number { font-size: 22px; font-weight: bold; color: #1a1a2e; }
-              .total { font-size: 20px; color: #28a745; font-weight: bold; }
+              .order-number { font-size: 22px; font-weight: bold; color: #1a1a2e; margin-bottom: 10px; }
+              .total { font-size: 20px; color: #28a745; font-weight: bold; margin-top: 15px; }
+              table { width: 100%%; border-collapse: collapse; margin-top: 10px; }
+              th { background: #1a1a2e; color: white; padding: 10px; text-align: left; }
               .footer { background: #f4f4f4; padding: 20px; text-align: center; color: #888; font-size: 12px; }
             </style>
             </head>
@@ -78,6 +96,16 @@ public class EmailService {
                 <div class="order-box">
                   <div class="order-number">%s</div>
                   <p>Delivering to: <strong>%s, %s</strong></p>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th style="text-align:center;">Qty</th>
+                        <th style="text-align:right;">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>%s</tbody>
+                  </table>
                   <div class="total">Total: $%s</div>
                 </div>
                 <p>Thank you for shopping with ShopSmart!</p>
@@ -91,6 +119,7 @@ public class EmailService {
                 event.getOrderNumber(),
                 event.getShippingCity(),
                 event.getShippingCountry(),
+                itemsHtml,
                 event.getTotal().toPlainString()
             );
     }

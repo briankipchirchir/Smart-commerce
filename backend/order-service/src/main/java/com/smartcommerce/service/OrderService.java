@@ -95,6 +95,15 @@ public class OrderService {
                 .total(saved.getTotal())
                 .shippingCity(saved.getShippingCity())
                 .shippingCountry(saved.getShippingCountry())
+                .items(saved.getItems().stream()
+                        .map(i -> OrderCreatedEvent.OrderItemEvent.builder()
+                                .productName(i.getProductName())
+                                .productBrand(i.getProductBrand())
+                                .quantity(i.getQuantity())
+                                .unitPrice(i.getUnitPrice())
+                                .totalPrice(i.getTotalPrice())
+                                .build())
+                        .toList())
                 .build());
         return toResponse(saved);
     }
