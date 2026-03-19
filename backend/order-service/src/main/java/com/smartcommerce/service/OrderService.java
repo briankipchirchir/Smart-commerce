@@ -27,6 +27,7 @@ import java.util.Random;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderEventPublisher eventPublisher;
     private static final BigDecimal TAX_RATE = new BigDecimal("0.08");
     private static final BigDecimal FREE_SHIPPING_THRESHOLD = new BigDecimal("50");
     private static final BigDecimal SHIPPING_COST = new BigDecimal("5.99");
@@ -84,6 +85,15 @@ public class OrderService {
         order.setItems(items);
         Order saved = orderRepository.save(order);
         log.info("Order created: {} for user: {}", orderNumber, userId);
+        eventPublisher.publishOrderCreated(OrderCreatedEvent.builder()
+                .orderNumber(saved.getOrderNumber())
+                .customerEmail(saved.getCustomerEmail())
+                .customerFirstName(saved.getCustomerFirstName())
+                .customerLastName(saved.getCustomerLastName())
+                .total(saved.getTotal())
+                .shippingCity(saved.getShippingCity())
+                .shippingCountry(saved.getShippingCountry())
+                .build());
         return toResponse(saved);
     }
 

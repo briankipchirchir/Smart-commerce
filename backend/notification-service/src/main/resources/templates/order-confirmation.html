@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 8px; overflow: hidden; }
+    .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .body { padding: 30px; }
+    .order-box { background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .order-number { font-size: 22px; font-weight: bold; color: #1a1a2e; }
+    .total { font-size: 20px; color: #28a745; font-weight: bold; }
+    .footer { background: #f4f4f4; padding: 20px; text-align: center; color: #888; font-size: 12px; }
+    .btn { display: inline-block; background: #1a1a2e; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; margin-top: 20px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>⚡ ShopSmart</h1>
+    <p>Order Confirmed!</p>
+  </div>
+  <div class="body">
+    <p>Hi <strong th:text="${firstName}"></strong>,</p>
+    <p>Your order has been placed successfully. Here are your order details:</p>
+    <div class="order-box">
+      <div class="order-number" th:text="${orderNumber}"></div>
+      <p>Delivering to: <strong th:text="${shippingCity + ', ' + shippingCountry}"></strong></p>
+      <div class="total">Total: $<span th:text="${#numbers.formatDecimal(total, 1, 2)}"></span></div>
+    </div>
+    <p>We'll notify you when your order ships. Thank you for shopping with ShopSmart!</p>
+    <a href="#" class="btn">Track My Order</a>
+  </div>
+  <div class="footer">
+    <p>© 2026 ShopSmart. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>
