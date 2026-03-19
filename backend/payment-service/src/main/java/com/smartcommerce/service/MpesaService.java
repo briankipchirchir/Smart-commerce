@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -69,19 +70,18 @@ public class MpesaService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessToken);
 
-        Map<String, Object> body = Map.of(
-                "BusinessShortCode", shortcode,
-                "Password", password,
-                "Timestamp", timestamp,
-                "TransactionType", "CustomerPayBillOnline",
-                "Amount", amount.intValue(),
-                "PartyA", formattedPhone,
-                "PartyB", shortcode,
-                "PhoneNumber", formattedPhone,
-                "CallBackURL", callbackUrl,
-                "AccountReference", orderNumber,
-                "TransactionDesc", "Payment for order " + orderNumber
-        );
+        Map<String, Object> body = new HashMap<>();
+        body.put("BusinessShortCode", shortcode);
+        body.put("Password", password);
+        body.put("Timestamp", timestamp);
+        body.put("TransactionType", "CustomerPayBillOnline");
+        body.put("Amount", amount.intValue());
+        body.put("PartyA", formattedPhone);
+        body.put("PartyB", shortcode);
+        body.put("PhoneNumber", formattedPhone);
+        body.put("CallBackURL", callbackUrl);
+        body.put("AccountReference", orderNumber);
+        body.put("TransactionDesc", "Payment for order " + orderNumber);
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(
