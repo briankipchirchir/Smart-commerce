@@ -59,6 +59,14 @@
                 <module>notification-service</module>
             </modules>
         </profile>
+
+        <profile>
+            <id>payment-service</id>
+            <modules>
+                <module>shared-library</module>
+                <module>payment-service</module>
+            </modules>
+        </profile>
     </profiles>
 
     <dependencyManagement>
