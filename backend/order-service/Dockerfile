@@ -6,7 +6,7 @@ COPY shared-library/ ./shared-library/
 COPY order-service/ ./order-service/
 
 # Build everything properly
-RUN mvn clean package -pl order-service -am -DskipTests
+RUN mvn clean package -pl order-service -am -P order-service -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
