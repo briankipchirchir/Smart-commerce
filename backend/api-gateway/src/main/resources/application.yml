@@ -62,7 +62,7 @@ spring:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
             - name: Retry
               args:
-                retries: 3
+                retries: 6
                 statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
                 methods: GET,POST,PUT,DELETE
                 backoff:
