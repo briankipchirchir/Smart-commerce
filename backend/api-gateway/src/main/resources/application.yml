@@ -15,10 +15,14 @@ spring:
             - Path=/api/auth/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: CircuitBreaker
+              args:
+                name: auth-service
+                fallbackUri: forward:/fallback/auth
             - name: Retry
               args:
-                retries: 3
-                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                retries: 2
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE
                 methods: GET,POST,PUT,DELETE
                 backoff:
                   firstBackoff: 1s
@@ -30,10 +34,14 @@ spring:
             - Path=/api/products/**, /api/categories/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: CircuitBreaker
+              args:
+                name: product-service
+                fallbackUri: forward:/fallback/products
             - name: Retry
               args:
-                retries: 3
-                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                retries: 2
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE
                 methods: GET,POST,PUT,DELETE
                 backoff:
                   firstBackoff: 1s
@@ -45,10 +53,14 @@ spring:
             - Path=/api/orders/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: CircuitBreaker
+              args:
+                name: order-service
+                fallbackUri: forward:/fallback/orders
             - name: Retry
               args:
-                retries: 3
-                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                retries: 2
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE
                 methods: GET,POST,PUT,DELETE
                 backoff:
                   firstBackoff: 1s
@@ -60,10 +72,14 @@ spring:
             - Path=/api/payments/**
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - name: CircuitBreaker
+              args:
+                name: payment-service
+                fallbackUri: forward:/fallback/payments
             - name: Retry
               args:
-                retries: 6
-                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,INTERNAL_SERVER_ERROR
+                retries: 2
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE
                 methods: GET,POST,PUT,DELETE
                 backoff:
                   firstBackoff: 1s
@@ -88,8 +104,44 @@ spring:
 server:
   port: 8080
 
+# Resilience4j Circuit Breaker config
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+    instances:
+      auth-service:
+        baseConfig: default
+      product-service:
+        baseConfig: default
+      order-service:
+        baseConfig: default
+      payment-service:
+        baseConfig: default
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 30s
+    instances:
+      auth-service:
+        baseConfig: default
+      product-service:
+        baseConfig: default
+      order-service:
+        baseConfig: default
+      payment-service:
+        baseConfig: default
+
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,circuitbreakers
+  health:
+    circuitbreakers:
+      enabled: true
