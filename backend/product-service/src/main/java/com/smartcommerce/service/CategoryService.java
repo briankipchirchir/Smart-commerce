@@ -20,6 +20,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "categories", key = "'all'")
     public List<CategoryResponse> getAllCategories() {
         log.info("Cache miss - fetching categories from DB");
@@ -66,15 +67,26 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    private CategoryResponse toResponse(Category category) {
-        return CategoryResponse.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .description(category.getDescription())
-                .imageUrl(category.getImageUrl())
-                .slug(category.getSlug())
-                .active(category.getActive())
-                .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
-                .build();
-    }
+//    private CategoryResponse toResponse(Category category) {
+//        return CategoryResponse.builder()
+//                .id(category.getId())
+//                .name(category.getName())
+//                .description(category.getDescription())
+//                .imageUrl(category.getImageUrl())
+//                .slug(category.getSlug())
+//                .active(category.getActive())
+//                .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
+//                .build();
+//    }
+private CategoryResponse toResponse(Category category) {
+    return CategoryResponse.builder()
+            .id(category.getId())
+            .name(category.getName())
+            .description(category.getDescription())
+            .imageUrl(category.getImageUrl())
+            .slug(category.getSlug())
+            .active(category.getActive())
+            .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
+            .build();
+}
 }

@@ -13,4 +13,4 @@ WORKDIR /app
 COPY --from=build /app/product-service/target/product-service-1.0.0.jar app.jar
 
 EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]

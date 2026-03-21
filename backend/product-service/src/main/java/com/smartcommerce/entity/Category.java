@@ -33,7 +33,7 @@ private Long id;
     @Builder.Default
     private Boolean active = true;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category",  fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Product> products;

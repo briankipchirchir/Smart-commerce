@@ -26,6 +26,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductMapper mapper;
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "products", key = "#page + '-' + #size + '-' + #sortBy")
     public PagedResult<ProductResponse> getAllProducts(int page, int size, String sortBy) {
         log.info("Cache miss - fetching products from DB: page={}, size={}", page, size);
