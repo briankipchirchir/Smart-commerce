@@ -1,4 +1,5 @@
 package com.smartcommerce.service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.smartcommerce.dto.ProductRequest;
 import com.smartcommerce.dto.ProductResponse;

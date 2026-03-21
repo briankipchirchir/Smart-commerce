@@ -39,7 +39,6 @@ public class Product {
     private String sku;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
     private List<String> images;

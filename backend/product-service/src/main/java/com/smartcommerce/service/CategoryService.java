@@ -1,5 +1,5 @@
 package com.smartcommerce.service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.smartcommerce.dto.CategoryRequest;
 import com.smartcommerce.dto.CategoryResponse;
 import com.smartcommerce.entity.Category;
