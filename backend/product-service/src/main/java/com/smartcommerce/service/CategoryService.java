@@ -35,7 +35,7 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-//    @Cacheable(value = "categories", key = "'all'")
+    @Cacheable(value = "categories", key = "'all'")
     public List<CategoryResponse> getAllCategories() {
         log.info("Cache miss - fetching categories from DB");
         return categoryRepository.findAll().stream()
@@ -43,15 +43,15 @@ public class CategoryService {
                 .toList();
     }
 
-//    @Cacheable(value = "categories", key = "#id")
+    @Cacheable(value = "categories", key = "#id")
     public CategoryResponse getCategoryById(Long id) {
         log.info("Cache miss - fetching category from DB: id={}", id);
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         return toResponse(category);
     }
-//
-//    @CacheEvict(value = "categories", allEntries = true)
+
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse createCategory(CategoryRequest request) {
         log.info("Creating category and evicting cache");
         Category category = Category.builder()
@@ -63,7 +63,7 @@ public class CategoryService {
         return toResponse(categoryRepository.save(category));
     }
 
-//    @CacheEvict(value = "categories", allEntries = true)
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse updateCategory(Long id, CategoryRequest request) {
         log.info("Updating category {} and evicting cache", id);
         Category category = categoryRepository.findById(id)
@@ -74,8 +74,8 @@ public class CategoryService {
         category.setSlug(request.getSlug());
         return toResponse(categoryRepository.save(category));
     }
-//
-//    @CacheEvict(value = "categories", allEntries = true)
+
+    @CacheEvict(value = "categories", allEntries = true)
     public void deleteCategory(Long id) {
         log.info("Deleting category {} and evicting cache", id);
         categoryRepository.deleteById(id);
