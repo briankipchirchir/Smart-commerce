@@ -73,7 +73,7 @@ public class CategoryService {
                 .description(category.getDescription())
                 .imageUrl(category.getImageUrl())
                 .slug(category.getSlug())
-                .active(category.isActive())
+                .active(category.getActive())
                 .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
                 .build();
     }
