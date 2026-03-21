@@ -1,15 +1,19 @@
 package com.smartcommerce.service;
-import org.springframework.transaction.annotation.Transactional;
+
 import com.smartcommerce.dto.CategoryRequest;
 import com.smartcommerce.dto.CategoryResponse;
 import com.smartcommerce.entity.Category;
 import com.smartcommerce.exception.ResourceNotFoundException;
 import com.smartcommerce.repository.CategoryRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +23,16 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CacheManager cacheManager;
+
+    @PostConstruct
+    public void clearCacheOnStartup() {
+        Cache cache = cacheManager.getCache("categories");
+        if (cache != null) {
+            cache.clear();
+            log.info("Categories cache cleared on startup");
+        }
+    }
 
     @Transactional(readOnly = true)
     @Cacheable(value = "categories", key = "'all'")
@@ -67,26 +81,15 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-//    private CategoryResponse toResponse(Category category) {
-//        return CategoryResponse.builder()
-//                .id(category.getId())
-//                .name(category.getName())
-//                .description(category.getDescription())
-//                .imageUrl(category.getImageUrl())
-//                .slug(category.getSlug())
-//                .active(category.getActive())
-//                .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
-//                .build();
-//    }
-private CategoryResponse toResponse(Category category) {
-    return CategoryResponse.builder()
-            .id(category.getId())
-            .name(category.getName())
-            .description(category.getDescription())
-            .imageUrl(category.getImageUrl())
-            .slug(category.getSlug())
-            .active(category.getActive())
-            .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
-            .build();
-}
+    private CategoryResponse toResponse(Category category) {
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .imageUrl(category.getImageUrl())
+                .slug(category.getSlug())
+                .active(category.getActive())
+                .productCount((int) categoryRepository.countByCategoryId(category.getId()))
+                .build();
+    }
 }
