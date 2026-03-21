@@ -3,72 +3,78 @@ package com.smartcommerce.service;
 import com.smartcommerce.dto.CategoryRequest;
 import com.smartcommerce.dto.CategoryResponse;
 import com.smartcommerce.entity.Category;
-import com.smartcommerce.exception.DuplicateResourceException;
 import com.smartcommerce.exception.ResourceNotFoundException;
-import com.smartcommerce.mapper.ProductMapper;
 import com.smartcommerce.repository.CategoryRepository;
-import com.smartcommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
-    private final ProductMapper mapper;
 
+    @Cacheable(value = "categories", key = "'all'")
     public List<CategoryResponse> getAllCategories() {
+        log.info("Cache miss - fetching categories from DB");
         return categoryRepository.findAll().stream()
-                .map(c -> {
-                    CategoryResponse response = mapper.toCategoryResponse(c);
-                    response.setProductCount(
-                        (int) productRepository.findByCategoryIdAndActiveTrue(
-                            c.getId(), PageRequest.of(0, Integer.MAX_VALUE)).getTotalElements()
-                    );
-                    return response;
-                })
+                .map(this::toResponse)
                 .toList();
     }
 
+    @Cacheable(value = "categories", key = "#id")
     public CategoryResponse getCategoryById(Long id) {
+        log.info("Cache miss - fetching category from DB: id={}", id);
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        return mapper.toCategoryResponse(category);
+        return toResponse(category);
     }
 
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse createCategory(CategoryRequest request) {
-        if (categoryRepository.existsByName(request.getName())) {
-            throw new DuplicateResourceException("Category already exists: " + request.getName());
-        }
+        log.info("Creating category and evicting cache");
         Category category = Category.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .imageUrl(request.getImageUrl())
-                .slug(request.getSlug() != null ? request.getSlug()
-                        : request.getName().toLowerCase().replace(" ", "-"))
+                .slug(request.getSlug())
                 .build();
-        return mapper.toCategoryResponse(categoryRepository.save(category));
+        return toResponse(categoryRepository.save(category));
     }
 
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+        log.info("Updating category {} and evicting cache", id);
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         category.setName(request.getName());
         category.setDescription(request.getDescription());
         category.setImageUrl(request.getImageUrl());
-        if (request.getSlug() != null) category.setSlug(request.getSlug());
-        return mapper.toCategoryResponse(categoryRepository.save(category));
+        category.setSlug(request.getSlug());
+        return toResponse(categoryRepository.save(category));
     }
 
+    @CacheEvict(value = "categories", allEntries = true)
     public void deleteCategory(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
+        log.info("Deleting category {} and evicting cache", id);
         categoryRepository.deleteById(id);
+    }
+
+    private CategoryResponse toResponse(Category category) {
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .imageUrl(category.getImageUrl())
+                .slug(category.getSlug())
+                .active(category.isActive())
+                .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
+                .build();
     }
 }
